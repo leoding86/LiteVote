@@ -1,0 +1,44 @@
+<extend name="Base/base" />
+
+<block name="body">
+  <taglib name="Admin" />
+  <div class="row">
+    <div class="col-md-12">
+      <notempty name="error">
+        <div class="alert alert-danger alert-dismissible fade in" role="alert" style="margin-bottom:0">
+          <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span></button>
+          <p>{$error}</p>
+        </div>
+      </notempty>
+      <notempty name="success">
+        <div class="alert alert-success alert-dismissible fade in" role="alert" style="margin-bottom:0">
+          <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span></button>
+          <p>{$success}</p>
+        </div>
+      </notempty>
+    </div>
+    <div class="col-md-12">
+      <h3>个人安全信息</h3>
+    </div>
+    <div class="col-md-3">
+      <form action="__SELF__" method="POST">
+        <div class="form-group">
+          <label for="security-opassword">原密码</label>
+          <input class="form-control" type="password" id="security-opassword" name="opassword" placeholder="请输入原密码">
+        </div>
+        <div class="form-group">
+          <label for="security-password">新的密码</label>
+          <input class="form-control" type="password" id="security-password" name="password" placeholder="请输入新的密码">
+        </div>
+        <div class="form-group">
+          <label for="security-rpassword">重复新的密码</label>
+          <input class="form-control" type="password" id="security-rpassword" name="rpassword" placeholder="请输再次输入新的密码">
+        </div>
+        <admin:grent permit="My/security">
+          <button class="btn btn-primary">保存</button>
+        </admin:grant>
+        <a class="btn btn-default" href="javascript:window.history.go(-1)">返回</a>
+      </form>
+    </div>
+  </div>
+</block>

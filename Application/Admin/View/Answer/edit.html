@@ -1,0 +1,36 @@
+<extend name="Base/base" />
+
+<block name="left">
+  <include file="Menu/survey-left" />
+  <include file="Menu/question-left" />
+</block>
+
+<block name="body">
+  <taglib name="Admin" />
+  <div class="row">
+    <div class="col-md-12">
+      <notempty name="error">
+        <div class="alert alert-danger alert-dismissible fade in" role="alert" style="margin-bottom:0">
+          <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span></button>
+          <p>{$error}</p>
+        </div>
+      </notempty>
+    </div>
+    <div class="col-md-12">
+      <h3>调查 “{$survey['title']}” / 问题 “{$question['title']}” / 编辑答案</h3>
+    </div>
+    <div class="col-md-6">
+      <form id="answer-form" action="__SELF__" method="POST">
+        <div class="form-group">
+          <label for="answer-answer">答案</label>
+          <textarea class="form-control" name="answer" id="answer-answer" rows="3" placeholder="请输入答案">{$post['answer']}</textarea>
+        </div>
+        <admin:grant permit="Answer/create">
+          <input type="hidden" name="question_id" value="{$question['id']}">
+          <button class="btn btn-primary" id="answer-save-btn">更新</button>
+        </admin:grant>
+        <a class="btn btn-default" href="javascript:window.history.go(-1)">返回</a>
+      </form>
+    </div>
+  </div>
+</block>

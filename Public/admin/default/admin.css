@@ -1,0 +1,123 @@
+body#admin-page {
+  padding: 50px 0 50px 200px;
+}
+
+body {
+  padding: 0;
+}
+
+#login-content {
+}
+
+#header-partial {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background: #fff;
+  z-index: 101;
+  box-shadow: 0 0 10px rgb(151, 151, 151);
+}
+
+#header-partial h1.title {
+  font-size: 30px;
+  margin: 0;
+  line-height: 50px;
+}
+
+#login-info .btn {
+  position: relative;
+  top:8px;
+}
+
+#left-partial {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 200px;
+  background: #eee;
+}
+
+#left-partial > .container-fluid {
+  padding-top: 60px;
+}
+
+#footer-partial {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+}
+
+#ui-datepicker-div {
+  background: #fff;
+}
+
+.ui-icon {
+  text-indent: 0;
+  cursor: pointer;
+}
+
+.table-top-actionbar {
+  margin-bottom: 5px;
+}
+
+table > tbody.empty-body {
+  content: '';
+  display: block;
+  height: 20px;
+}
+
+#question-groups .panel-body,
+.dataset-list-panel-body {
+  padding: 0px 10px;
+}
+
+ul.questions-list,
+ul.dataset-list {
+  padding: 10px 0;
+  margin: 0;
+}
+
+.form-alert {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+#uploader #btns,
+#uploader #progress {
+  margin-bottom: 15px;
+}
+
+#uploader #attachments .attachment-item {
+  margin-bottom: 15px;
+  margin-right: 15px;
+  width: 200px;
+  height: 200px;
+  float: left;
+}
+
+#uploader #attachments .thumb {
+  padding: 5px;
+  border:1px solid #dedede;
+  border-radius: 5px;
+}
+
+#uploader .attachment-selected .thumb {
+  background: #eee;
+  border-color: #ccc;
+}
+
+#uploader .attachment-selected .title {
+  font-weight: 700;
+}
+
+form .uploader img {
+  margin-bottom: 3px;
+  padding: 3px;
+  border: 1px solid #eee;
+  border-radius: 3px;
+}

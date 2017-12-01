@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <css href="__PUBLIC__/bootstrap3/css/bootstrap.min.css" />
+  <css href="__PUBLIC__/lib/jquery-ui-1.10.4/css/no-theme/jquery-ui.css" />
+  <css href="__PUBLIC__/admin/default/admin.css" />
+  <js href="__PUBLIC__/jquery-1.12.js" />
+  <js href="__PUBLIC__/lib/jquery-ui-1.10.4/js/jquery-ui.js" />
+  <js href="__PUBLIC__/lib/notify.min.js" />
+  <js href="__PUBLIC__/bootstrap3/js/bootstrap.min.js" />
+  <js href="__PUBLIC__/admin/default/admin.js" />
+</head>
+<body id="login-page">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4 col-md-offset-4" id="login-content">
+        <notempty name="error">
+          <div class="alert alert-danger alert-dismissible fade in" role="alert">
+            <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span></button>
+            <p>{$error}，重新登陆 或 <a href="javascript:history.go(-1)">返回</a></p>
+          </div>
+        </notempty>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            Lite Vote 登陆
+          </div>
+          <div class="panel-body">
+            <form action="__SELF__" id="login-form">
+              <div class="form-group">
+                <label for="login-username">用户名</label>
+                <input type="text" name="username" id="login-username" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="login-password">密码</label>
+                <input type="password" name="password" id="login-password" class="form-control">
+              </div>
+              <button class="btn btn-primary" role="button" id="login-btn">登陆</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script>
+  $(function() {
+    function loginFormPos() {
+      $('#login-content').css('padding-top', $(document).height() / 4);
+    }
+
+    $(window).on('resize', function() {
+      loginFormPos();
+    });
+    loginFormPos();
+
+    $('#login-btn').on('click', function() {
+      var data = $('#login-form').serializeArray();
+      var url = $('#login-form').attr('action');
+
+      $.ajax({
+        url: url,
+        data: data,
+        type: 'POST',
+        success: function(r) {
+          if (r.status == 'ok') {
+            $.notify(r.msg, 'success');
+            window.location.href = "{:U(C('LOGIN_INDEX'))}";
+          } else if (r.status == 'err') {
+            $.notify(r.msg, 'error');
+          }
+        }
+      });
+
+      return false;
+    });
+  });
+</script>
+</html>

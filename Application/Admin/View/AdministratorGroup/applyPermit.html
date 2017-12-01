@@ -1,0 +1,45 @@
+<extend name="Base/base" />
+
+<block name="body">
+  <taglib name="Admin" />
+  <div class="row">
+    <div class="col-md-12">
+      <notempty name="error">
+        <div class="alert alert-danger alert-dismissible fade in" role="alert" style="margin-bottom:0">
+          <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span></button>
+          <p>{$error}</p>
+        </div>
+      </notempty>
+      <notempty name="success">
+        <div class="alert alert-success alert-dismissible fade in" role="alert" style="margin-bottom:0">
+          <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span></button>
+          <p>{$success}</p>
+        </div>
+      </notempty>
+    </div>
+    <div class="col-md-12">
+      <h3>管理员组 “{$group['title']}” 权限</h3>
+    </div>
+    <div class="col-md-6">
+      <form action="__SELF__" method="POST">
+        <volist name="permits_list" id="permits">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <volist name="permits" id="permit">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" name="permits[]" value="{$permit.permit}" <?php if (in_array($permit['permit'], $group_permits)) {echo 'checked="checked"';} ?>> {$permit.description}
+                  </label>
+                </div>
+              </volist>
+            </div>
+          </div>
+        </volist>
+        <admin:grant permit="Administrator/create">
+          <button class="btn btn-primary" id="answer-save-btn">保存</button>
+        </admin:grant>
+        <a class="btn btn-default" href="javascript:window.history.go(-1)">返回</a>
+      </form>
+    </div>
+  </div>
+</block>

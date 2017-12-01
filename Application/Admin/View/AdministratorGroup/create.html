@@ -1,0 +1,30 @@
+<extend name="Base/base" />
+
+<block name="body">
+  <taglib name="Admin" />
+  <div class="row">
+    <div class="col-md-12">
+      <notempty name="error">
+        <div class="alert alert-danger alert-dismissible fade in" role="alert" style="margin-bottom:0">
+          <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span></button>
+          <p>{$error}</p>
+        </div>
+      </notempty>
+    </div>
+    <div class="col-md-12">
+      <h3>新建管理员组</h3>
+    </div>
+    <div class="col-md-6">
+      <form action="__SELF__" method="POST">
+        <div class="form-group">
+          <label for="title">组名</label>
+          <input type="text" class="form-control" name="title" id="title" placeholder="请输入管理员组名" value="{$post['name']}">
+        </div>
+        <admin:grant permit="Administrator/create">
+          <button class="btn btn-primary" id="answer-save-btn">保存</button>
+        </admin:grant>
+        <a class="btn btn-default" href="javascript:window.history.go(-1)">返回</a>
+      </form>
+    </div>
+  </div>
+</block>

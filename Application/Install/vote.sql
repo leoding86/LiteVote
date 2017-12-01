@@ -1,0 +1,18 @@
+CREATE TABLE `sandbox_litevote`.`ls_vote` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `unid` VARCHAR(255) NOT NULL,
+  `admin_id` INT(11) NOT NULL,
+  `title` VARCHAR(255) NOT NULL,
+  `summary` TEXT NULL,
+  `help` TEXT NULL,
+  `select_limits` INT(11) NOT NULL DEFAULT 1,
+  `round_type` INT(11) NOT NULL DEFAULT 1,
+  `enable` TINYINT(1) NOT NULL DEFAULT 1,
+  `enable_api` TINYINT(1) NOT NULL DEFAULT 0,
+  `from_domain` TEXT NULL,
+  `verify_type` VARCHAR(255) NOT NULL,
+  `start_time` INT(11) UNSIGNED NOT NULL DEFAULT 0,
+  `end_time` INT(11) UNSIGNED NOT NULL DEFAULT 0,
+  `create_time` INT(11) UNSIGNED NOT NULL,
+  `update_time` INT(11) UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`));

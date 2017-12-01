@@ -1,0 +1,48 @@
+<extend name="Base/base" />
+
+<block name="head_js">
+  <script src="__PUBLIC__/lib/Sortable.js"></script>
+</block>
+
+<block name="body">
+  <taglib name="Admin" />
+  <div class="row">
+    <div class="col-md-12">
+      <h3>管理员组列表</h3>
+    </div>
+    <div class="col-md-12 table-top-actionbar">
+      <admin:grant permit="AdministratorGroup/create"><a href="{:U('AdministratorGroup/create')}" class="btn btn-primary">新建管理员组</a></admin:grant>
+    </div>
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-body dataset-list-panel-body">
+          <ul class="list-group dataset-list">
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-sm-1">#</div>
+                <div class="col-sm-9">管理员组</div>
+                <div class="col-sm-2 text-right">操作</div>
+              </div>
+            </li>
+            <volist name="groups" id="group">
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-sm-1">{$group.id}</div>
+                <div class="col-sm-9">{$group.title}</div>
+                <div class="col-sm-2 text-right">
+                  <admin:grant permit="AdministratorGroup/edit"><a href="{:U('AdministratorGroup/edit', ['id' => $group['id']])}">查看</a></admin:grant>
+                  <admin:grant permit="AdministratorGroup/applyPermit"><a href="{:U('AdministratorGroup/applyPermit', ['id' => $group['id']])}">权限</a></admin:grant>
+                  <if condition="$group['id'] neq 1">
+                    <admin:grant permit="AdministratorGroup/delete"><a class="confirm-link" data-confirm-msg="确定删除？" href="{:U('AdministratorGroup/delete', ['id' => $group['id']])}">删除</a></admin:grant>
+                  </if>
+                </div>
+              </div>
+            </li>
+            </volist>
+          </ul>
+          {$page}
+        </div>
+      </div>
+    </div>
+  </div>
+</block>

@@ -1,0 +1,45 @@
+<extend name="Base/base" />
+
+<block name="body">
+  <taglib name="Admin" />
+  <div class="row">
+    <div class="col-md-12">
+      <h3>投票列表</h3>
+    </div>
+    <div class="col-md-12 table-top-actionbar">
+      <admin:grent permit="Vote/create"><a class="btn btn-primary" href="{:U('Vote/create')}">创建</a></admin:grant>
+    </div>
+    <div class="col-md-12">
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th style="width:50px">#</th>
+              <th>投票标题</th>
+              <th style="width:150px">是否启用</th>
+              <th style="width:150px">创建时间</th>
+              <th style="width:100px">操作</th>
+            </tr>
+          </thead>
+          <volist name="list" id="vote">
+            <tr>
+              <td>{$vote.id}</td>
+              <td>{$vote.title} <admin:grant permit="VoteItem/index"><a class="btn btn-warning btn-xs" href="{:U('VoteItem/index', ['vote_id' => $vote['id']])}">投票项目</a></admin:grant></td>
+              <td>{$vote.enable|ReadableText::enableType}</td>
+              <td>{$vote['create_time']->format('Y-m-d')}</td>
+              <td>
+                <admin:grent permit="Vote/edit"><a href="{:U('Vote/edit', ['id' => $vote['id']])}">查看</a></admin:grant>
+                <if condition="$vote['enable'] eq 1">
+                  <admin:grent permit="Vote/disable"><a href="{:U('Vote/disable', ['id' => $vote['id']])}">禁用</a></a></admin:grant>
+                <else />
+                  <admin:grent permit="Vote/enable"><a href="{:U('Vote/enable', ['id' => $vote['id']])}">启用</a></admin:grant>
+                </if>
+              </td>
+            </tr>
+          </volist>
+        </table>
+      </div>
+      {$page}
+    </div>
+  </div>
+</block>

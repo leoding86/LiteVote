@@ -1,0 +1,47 @@
+<extend name="Base/base" />
+
+<block name="head_js">
+  <script src="__PUBLIC__/lib/Sortable.js"></script>
+</block>
+
+<block name="body">
+  <taglib name="Admin" />
+  <div class="row">
+    <div class="col-md-12">
+      <h3>管理员列表</h3>
+    </div>
+    <div class="col-md-12 table-top-actionbar">
+      <admin:grant permit="Administrator/create"><a href="{:U('Administrator/create')}" class="btn btn-primary">新建管理员</a></admin:grant>
+    </div>
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-body dataset-list-panel-body">
+          <ul class="list-group dataset-list">
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-sm-1">#</div>
+                <div class="col-sm-7">用户名</div>
+                <div class="col-sm-2">最后登陆</div>
+                <div class="col-sm-2 text-right">操作</div>
+              </div>
+            </li>
+            <volist name="administrators" id="administrator">
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-sm-1">{$administrator.id}</div>
+                <div class="col-sm-7">{$administrator.username}</div>
+                <div class="col-sm-2">{$administrator.login_time|date="Y-m-d H:i:s",###}</div>
+                <div class="col-sm-2 text-right">
+                  <admin:grant permit="Administrator/edit"><a href="{:U('Administrator/edit', ['id' => $administrator['id']])}">查看</a></admin:grant>
+                  <if condition="$administrator['id'] neq 1"><admin:grant permit="Administrator/delete"><a class="confirm-link" data-confirm-msg="确定删除？" href="{:U('Administrator/delete', ['id' => $administrator['id']])}">删除</a></admin:grant></if>
+                </div>
+              </div>
+            </li>
+            </volist>
+          </ul>
+          {$page}
+        </div>
+      </div>
+    </div>
+  </div>
+</block>

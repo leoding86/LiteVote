@@ -1,0 +1,73 @@
+<extend name="Base/base" />
+
+<block name="body">
+  <taglib name="Admin" />
+  <div class="row">
+    <div class="col-md-12">
+      <notempty name="error">
+        <div class="alert alert-danger alert-dismissible fade in form-alert" role="alert">
+          <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span></button>
+          <p>{$error}</p>
+        </div>
+      </notempty>
+      <h3>投票 “{$vote['title']}” / 编辑投票项目</h3>
+    </div>
+    <div class="col-md-6">
+      <form id="form" action="__SELF__" method="POST">
+        <div class="form-group">
+          <label for="title">项目标题</label>
+          <input class="form-control" type="text" id="title" name="title" placeholder="请输入项目标题" value="{$post['title']}">
+        </div>
+        <div class="form-group">
+          <label for="summary">说明信息</label>
+          <textarea rows="5" name="summary" id="summary" class="form-control" placeholder="请输入项目说明">{$post['summary']}</textarea>
+        </div>
+        <div class="row">
+          <div class="col-md-3 col-sm-6">
+            <div class="form-group">
+              <label for="content-type">内容类型</label> <span tabindex="0" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-container="body" data-toggle="popover" data-placement="right" data-content="选择“链接”类型，将跳转到指定页面" data-trigger="focus"></span>
+              <admin:select class="form-control" id="content-type" name="content_type" options="content_type_options" value="$post['content_type']" />
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>封面</label>
+          <div class="row">
+            <div class="col-md-4 uploader">
+              <input type="hidden" name="thumb" id="thumb">
+              <img class="thumb img-responsive" src="{$thumb}">
+              <input class="btn btn-default attachment-opener" type="button" value="选择封面" data-input-id="thumb">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="content">内容</label>
+          <textarea rows="5" name="content" id="help" class="form-control" placeholder="请输入项目内容">{$post['content']}</textarea>
+        </div>
+        <div class="form-group">
+          <label for="redirect-url">链接</label> <span tabindex="0" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-container="body" data-toggle="popover" data-placement="right" data-content="需要跳转到的指定页面" data-trigger="focus"></span>
+          <input type="text" name="redirect_url" id="redirect-url" class="form-control" value="{$post['content']}" placeholder="请输入有效的跳转链接">
+        </div>
+        <admin:grant permit="VoteItem/edit">
+          <button class="btn btn-primary">保存</button>
+        </admin:grant>
+        <input type="hidden" name="id" value="{$post['id']}">
+        <a class="btn btn-default" href="javascript:window.history.go(-1)">返回</a>
+      </form>
+    </div>
+  </div>
+  <script>
+    $('[data-toggle="popover"]').popover();
+
+    $('.attachment-opener').on('click', function() {
+      var uploaderWindow = window.open("{:U('Attachment/index')}", 'attachment_manager', 'resizeable, scrollbars, status');
+      uploaderWindow.inputId = $(this).attr('data-input-id');
+    });
+
+    var uploaderSelectCallback = function(selectedItem, inputId) {
+      var $uploader = $('#' + inputId).parent('.uploader');
+      $uploader.find('.thumb').attr('src', selectedItem.src);
+      $uploader.find('input#' + inputId).val(selectedItem.path);
+    }
+  </script>
+</block>

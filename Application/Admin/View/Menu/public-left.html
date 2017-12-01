@@ -1,0 +1,7 @@
+<ul class="list-group">
+  <admin:grant permit="Vote/index"><li class="list-group-item"><a href="{:U('Vote/index')}">投票管理</a></li></admin:grant>
+  <notempty name="vote">
+    <admin:grant permit="VoteItem/index"><li class="list-group-item"><a href="{:U('VoteItem/index', ['vote_id' => $vote['id']])}">投票项目管理</a></li></admin:grant>      
+    <admin:grant permit="Vote/export"><li class="list-group-item"><a href="{:U('Vote/export')}">导出投票结果</a></li></admin:grant>
+  </notempty>
+</ul>

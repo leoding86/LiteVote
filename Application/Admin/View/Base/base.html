@@ -1,0 +1,69 @@
+<?php
+use Vendor\Util\ReadableText;
+use Model\AdminModel as Admin;
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Lite Vote - {$page_title}</title>
+  <css href="__PUBLIC__/bootstrap3/css/bootstrap.min.css" />
+  <css href="__PUBLIC__/lib/jquery-ui-1.10.4/css/no-theme/jquery-ui.css" />
+  <css href="__PUBLIC__/admin/default/admin.css" />
+  <js href="__PUBLIC__/jquery-1.12.js" />
+  <js href="__PUBLIC__/lib/jquery-ui-1.10.4/js/jquery-ui.js" />
+  <js href="__PUBLIC__/lib/notify.min.js" />
+  <js href="__PUBLIC__/bootstrap3/js/bootstrap.min.js" />
+  <js href="__PUBLIC__/admin/default/admin.js" />
+
+  <block name="head_js"></block>
+</head>
+<body id="admin-page">
+  <div id="header-partial">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-4"><h1 class="title">Lite Vote</h1></div>
+        <div class="col-sm-8 text-right">
+          <div id="login-info">
+            <a href="#" class="btn disabled" role="button"><?php echo Admin::$udata['username']; ?></a>
+            <a href="{:U('My/Security')}" class="btn btn-primary" role="button">个人信息</a>
+            <a href="{:U('Login/logout')}" class="btn btn-warning" role="button">登出</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="left-partial">
+    <div class="container-fluid">
+      <include file="Menu/public-left" />
+      <block name="left"></block>
+      <include file="Menu/system-left" />
+    </div>
+  </div>
+
+  <div id="main-partial">
+    <div class="container-fluid">
+      <block name="body">body</block>
+    </div>
+  </div>
+
+  <div id="footer-partial">
+
+  </div>
+</body>
+<block name="foot_js"></block>
+
+<script>
+  $(function() {
+    var partialSize = {
+      headHeight: 80,
+      leftWidth: 200,
+      footerHeight: 50
+    };
+  });
+</script>
+</html>

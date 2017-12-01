@@ -1,0 +1,111 @@
+<extend name="Base/base" />
+
+<block name="head_js">
+  <script src="__PUBLIC__/lib/Sortable.js"></script>
+</block>
+
+<block name="left">
+  <include file="Menu/Survey-left" />
+  <include file="Menu/question-left" />
+</block>
+
+<block name="body">
+  <taglib name="Admin" />
+  <div class="row">
+    <div class="col-md-12">
+      <h3>调查 “{$survey['title']}” / 问题 “{$question['title']}” / 答案列表</h3>
+    </div>
+    <div class="col-md-12 table-top-actionbar">
+      <admin:grant permit="Answer/create"><a href="{:U('Answer/create', ['question_id' => $question['id']])}" class="btn btn-primary">创建问题</a></admin:grant>
+      <admin:grant permit="Answer/sort"><a href="javascript:void(0)" id="sort-btn" class="btn btn-default" disabled="disabled">保存排序</a></admin:grant>
+    </div>
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-body dataset-list-panel-body">
+          <ul class="list-group answers-list dataset-list" id="answers-list">
+            <volist name="answers_dataset" id="answer">
+              <li class="list-group-item" data-answer-id="{$answer.id}">
+                <div class="row">
+                  <div class="col-sm-1">{$answer.id}</div>
+                  <div class="col-sm-9">{$answer.answer}</div>
+                  <div class="col-sm-2 text-right">
+                    <admin:grant permit="Answer/edit"><a href="{:U('Answer/edit', ['id' => $answer['id']])}">查看</a></admin:grant>
+                    <admin:grant permit="Answer/delete"><a class="confirm-link" data-confirm-msg="确定删除？" href="{:U('Answer/delete', ['id' => $answer['id']])}">删除</a></admin:grant>
+                  </div>
+                </div>
+              </li>
+            </volist>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</block>
+
+<block name="foot_js">
+  <script>
+    $(function() {
+      var $sortBtn = $('#sort-btn');
+          $answersList = $('#answers-list')[0],
+          answersSortableInstance = null,
+          answersSort = [];
+          saveSortUrl = "{:U('Answer/sort')}";
+
+      function initSort() {
+        answersSort = [];
+      }
+
+      function enableSortBtn() {
+        if (!$sortBtn.attr('disabled')) {
+          return;
+        }
+        $sortBtn.removeAttr('disabled');
+        $sortBtn.on('click', saveSort);
+      }
+
+      function disableSortBtn() {
+        $sortBtn.attr('disabled', 'disabled');
+        $sortBtn.off('click', saveSort);
+      }
+
+      function enableSort() {
+        answersSortableInstance.option('disabled', false);
+      }
+
+      function disableSort() {
+        answersSortableInstance.option('disabled', true);
+      }
+
+      function saveSort() {
+        disableSortBtn();
+        disableSort();
+
+        $.notify('正在保存排序，请稍后。', 'info');
+        $.ajax({
+          url: saveSortUrl,
+          data: {'answers_sort': answersSort},
+          type: 'post',
+          success: function(r) {
+            if (r.status == 'ok') {
+              $.notify(r.msg, 'success');
+            } else {
+              $.notify(r.msg, 'error');
+            }
+            initSort();
+            enableSort();
+          }
+        });
+      }
+      
+      answersSortableInstance = Sortable.create($answersList, {
+        animation: 300,
+        scrollSensitivity: 100,
+        dataIdAttr: 'data-answer-id',
+        onSort: function(evt) {
+          answersSort = this.toArray();
+          enableSortBtn();
+        }
+      });
+    });
+  </script>
+</block>

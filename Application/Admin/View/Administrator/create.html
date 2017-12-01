@@ -1,0 +1,38 @@
+<extend name="Base/base" />
+
+<block name="body">
+  <taglib name="Admin" />
+  <div class="row">
+    <div class="col-md-12">
+      <notempty name="error">
+        <div class="alert alert-danger alert-dismissible fade in" role="alert" style="margin-bottom:0">
+          <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span></button>
+          <p>{$error}</p>
+        </div>
+      </notempty>
+    </div>
+    <div class="col-md-12">
+      <h3>新建管理员</h3>
+    </div>
+    <div class="col-md-6">
+      <form action="__SELF__" method="POST">
+        <div class="form-group">
+          <label for="username">用户名</label>
+          <input type="text" class="form-control" name="username" id="username" placeholder="请输入用户名" value="{$post['username']}">
+        </div>
+        <div class="form-group">
+          <label for="username">密码</label>
+          <input type="password" class="form-control" name="password" id="username" placeholder="请输入密码">
+        </div>
+        <div class="form-group">
+          <label for="username">重复密码</label>
+          <input type="password" class="form-control" name="rpassword" id="username" placeholder="请重复密码">
+        </div>
+        <admin:grant permit="Administrator/create">
+          <button class="btn btn-primary" id="answer-save-btn">保存</button>
+        </admin:grant>
+        <a class="btn btn-default" href="javascript:window.history.go(-1)">返回</a>
+      </form>
+    </div>
+  </div>
+</block>

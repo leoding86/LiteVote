@@ -1,0 +1,11 @@
+.select-maximum-badge {
+  position: relative;
+}
+
+.select-minimum-badge {
+  position: relative;
+}
+
+.error-question {
+  border-left: 3px solid red;
+}

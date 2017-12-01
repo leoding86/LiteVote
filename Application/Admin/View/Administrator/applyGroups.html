@@ -1,0 +1,39 @@
+<extend name="Base/base" />
+
+<block name="head_js">
+  <script src="__PUBLIC__/lib/Sortable.js"></script>
+</block>
+
+<block name="body">
+  <taglib name="Admin" />
+  <div class="row">
+    <div class="col-md-12">
+      <h3>“{$administrator['username']}” 应用管理员组</h3>
+    </div>
+    <div class="col-md-12">
+      <ul class="list-group dataset-list">
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-10">管理员组</div>
+            <div class="col-sm-2">操作</div>
+          </div>
+        </li>
+        <volist name="groups" id="group">
+        <li class="list-group-item" data-admin-group-id="{$group.id}">
+          <div class="row">
+            <div class="col-sm-10">{$group.title}</div>
+            <div class="col-sm-2">
+              <if condition="in_array($group['id'], $admin_group_ids)">
+                <a class="btn btn-danger btn-xs group-remove-btn" href="{:U('Administrator/applyGroups', ['id' => $administrator['id'], 'admin_group_id' => $group['id'], 'action' => 'remove'])}">移除</a>
+              <else />
+                <a class="btn btn-success btn-xs group-add-btn" href="{:U('Administrator/applyGroups', ['id' => $administrator['id'], 'admin_group_id' => $group['id'], 'action' => 'add'])}">添加</a>
+              </if>
+            </div>
+          </div>
+        </li>
+        </volist>
+      </ul>
+      {$page}
+    </div>
+  </div>
+</block>

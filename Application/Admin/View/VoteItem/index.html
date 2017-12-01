@@ -1,0 +1,39 @@
+<extend name="Base/base" />
+
+<block name="body">
+  <taglib name="Admin" />
+  <div class="row">
+    <div class="col-md-12">
+      <h3>投票 “{$vote['title']}” / 项目列表</h3>
+    </div>
+    <div class="col-md-12 table-top-actionbar">
+      <admin:grent permit="VoteItem/create"><a class="btn btn-primary" href="{:U('VoteItem/create', ['vote_id' => $vote['id']])}">创建</a></admin:grant>
+    </div>
+    <div class="col-md-12">
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th style="width:50px">#</th>
+              <th>项目名称</th>
+              <th style="width:180px">创建时间</th>
+              <th style="width:100px">操作</th>
+            </tr>
+          </thead>
+          <volist name="list" id="item">
+            <tr>
+              <td>{$item.id}</td>
+              <td>{$item.title}</td>
+              <td>{$item['create_time']->format('Y-m-d H:i:s')}</td>
+              <td>
+                <admin:grent permit="VoteItem/edit"><a href="{:U('VoteItem/edit', ['id' => $item['id']])}">查看</a></admin:grant>
+                <admin:grent permit="VoteItem/delete"><a href="{:U('VoteItem/delete', ['id' => $item['id']])}">删除</a></admin:grant>
+              </td>
+            </tr>
+          </volist>
+        </table>
+      </div>
+      {$page}
+    </div>
+  </div>
+</block>

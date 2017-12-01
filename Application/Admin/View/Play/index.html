@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="__PUBLIC__/lib/Sortable.js"></script>
+</head>
+<body>
+  <ul class="parent-list">
+    <li>parent 1
+      <ul class="child-list-1">
+        <li>child 1</li>
+        <li>child 2</li>
+      </ul>
+    </li>
+    <li>
+      parent 2
+      <ul class="child-list-2">
+        <li>child 3</li>
+        <li>child 4</li>
+      </ul>
+    </li>
+    <li>parent 3
+      <ul class="child-list-3">
+        <li>child 5</li>
+        <li>child 6</li>
+      </ul>
+    </li>
+  </ul>
+  <script>
+  var parent = document.querySelector('.parent-list');
+  Sortable.create(parent, {
+    animation: 150
+  });
+
+  var childList1 = document.querySelector('.child-list-1');
+  var childList2 = document.querySelector('.child-list-2');
+  var childList3 = document.querySelector('.child-list-3');
+
+  Sortable.create(childList1, { group: "questions" });
+  Sortable.create(childList2, { group: "questions" });
+  Sortable.create(childList3, { group: "questions" });
+  </script>
+</body>
+</html>

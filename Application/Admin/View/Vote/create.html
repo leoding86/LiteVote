@@ -1,0 +1,122 @@
+<extend name="Base/base" />
+
+<block name="body">
+  <taglib name="Admin" />
+  <div class="row">
+    <div class="col-md-12">
+      <notempty name="error">
+        <div class="alert alert-danger alert-dismissible fade in form-alert" role="alert">
+          <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span></button>
+          <p>{$error}</p>
+        </div>
+      </notempty>
+      <h3>创建投票</h3>
+    </div>
+    <div class="col-md-6">
+      <form id="form" action="{:U('Vote/create')}" method="POST">
+        <div class="form-group">
+          <label for="title">投票标题</label>
+          <input class="form-control" type="text" id="title" name="title" placeholder="请输入投票标题" value="{$post['title']}">
+        </div>
+        <div class="form-group">
+          <label for="summary">说明信息</label>
+          <textarea rows="5" name="summary" id="summary" class="form-control" placeholder="请输入调查说明">{$post['summary']}</textarea>
+        </div>
+        <div class="form-group">
+          <label for="help">帮助信息</label>
+          <textarea rows="5" name="help" id="help" class="form-control" placeholder="请输入帮助信息">{$post['help']}</textarea>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-4">
+              <label for="start-time">开始时间</label>
+              <input id="start-time" type="text" name="start_time" class="form-control" value="{$post['start_time']->format('Y-m-d')}">
+            </div>
+            <div class="col-md-4">
+              <label for="end-time">结束时间</label>
+              <input id="end-time" type="text" name="end_time" class="form-control" value="{$post['end_time']->format('Y-m-d')}">
+            </div>
+            <div class="col-md-4">
+              <label for="interval">投票间隔</label>
+              <admin:select class="form-control" id="interval" options="interval_options" value="$post['interval']" />
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-3">
+              <label for="select_max_limits">选择上限</label>
+              <input class="form-control" type="number" name="select_max_limits" id="select_max_limits" value="{$post['select_max_limits']}">
+            </div>
+            <div class="col-sm-3">
+              <label for="select_min_limits">选择下限</label>
+              <input class="form-control" type="number" name="select_min_limits" id="select_min_limits" value="{$post['select_min_limits']}">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+              <label for="verify">验证方式</label> <span tabindex="0" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-container="body" data-toggle="popover" data-placement="right" data-content="手机验证使用短信验证；微信验证仅能在微信上使用" data-trigger="focus"></span>
+              <admin:select name="verify_type" id="verify" class="form-control" options="verify_options" value="$post['verify_type']" />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="enable_api">启用API</label> <span tabindex="0" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-container="body" data-toggle="popover" data-placement="right" data-content="启用后，允许不同域名的来源请求" data-trigger="focus"></span>
+              <admin:select name="enable_api" id="enable_api" class="form-control" options="enable_api_options" value="$post['enable_api']" />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="enable_domains">允许来源域名</label> <span tabindex="0" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-container="body" data-toggle="popover" data-placement="right" data-content="允许的来源域名，不需要http(s)，一行一条" data-trigger="focus"></span>
+              <textarea class="form-control" name="enable_domains" id="enable_domains" rows="10">{$post['enable_domains']}</textarea>
+            </div>
+          </div>
+        </div>
+        <admin:grant permit="Vote/create">
+          <button class="btn btn-primary">保存</button>
+        </admin:grant>
+        <a class="btn btn-default" href="javascript:window.history.go(-1)">返回</a>
+      </form>
+    </div>
+  </div>
+</block>
+
+<block name="foot_js">
+  <script>
+    $(function() {
+      $('[data-toggle="popover"]').popover();
+
+      var dateFormat = "yy-mm-dd";
+      var startTime = $('#start-time').datepicker({
+        dateFormat: dateFormat,
+        defaultDate: "+1w",
+        changeMonth: true,
+      }).on('change', function() {
+        endTime.datepicker("option", "minDate", getDate(this));
+      });
+  
+      var endTime = $('#end-time').datepicker({
+        dateFormat: dateFormat,
+        defaultDate: "+1w",
+        changeMonth: true
+      }).on('change', function() {
+        startTime.datepicker("option", "maxDate", getDate(this));
+      });
+      function getDate(element) {
+        var date;
+        try {
+          date = $.datepicker.parseDate(dateFormat, element.value);
+        } catch( error ) {
+          date = null;
+        }
+        return date;
+      }
+    });
+  </script>
+</block>

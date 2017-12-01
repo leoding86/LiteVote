@@ -1,0 +1,8 @@
+<!-- 调查相关的左侧菜单 -->
+<empty name="vote">
+  NEED_VOTE_INFO!
+<else />
+  <ul class="list-group">
+    <admin:grant permit="VoteItem/index"><li class="list-group-item"><a href="{:U('VoteItem/index', ['vote_id' => $vote['id']])}">投票项目管理</a></li></admin:grant>
+  </ul>
+</empty>
