@@ -3,6 +3,7 @@ namespace Home\Controller;
 
 use Think\Controller as BaseController;
 use Vendor\Util\AjaxResponse;
+use Model\SettingModel as Setting;
 
 /**
  * 入口控制器
@@ -33,6 +34,9 @@ class EntryController extends BaseController
     parent::__construct();
     $this->referer = $_SERVER['HTTP_REFERER'];
     $this->AjaxResponse = new AjaxResponse();
+
+    $setting = new Setting('system');
+    C($setting->read());
   }
 
   /**

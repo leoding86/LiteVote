@@ -6,4 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'StringTemplate\\Test' => array($vendorDir . '/nicmart/string-template/tests'),
+    'StringTemplate' => array($vendorDir . '/nicmart/string-template/src'),
 );

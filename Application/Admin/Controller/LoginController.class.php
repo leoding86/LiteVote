@@ -1,12 +1,11 @@
 <?php
 namespace Admin\Controller;
 
-import('Vendor.EasyPermit.EasyPermit');
-
 use Think\Controller;
 use Model\AdminModel as Admin;
+use Model\ActionLimitationModel as ActionLimitation;
+use Model\SettingModel as Setting;
 use Vendor\Util\AjaxResponse;
-use EasyPermit\EasyPermit;
 
 class LoginController extends Controller
 {
@@ -15,43 +14,68 @@ class LoginController extends Controller
    *
    * @var \Vendor\Util\AjaxResponse
    */
-  protected $ajaxResponse;
+    protected $ajaxResponse;
 
-  public function __construct()
-  {
-    parent::__construct();
-    $this->ajaxResponse = new AjaxResponse();
-  }
+    /**
+     * Setting model
+     *
+     * @var Setting
+     */
+    protected $setting;
 
-  public function index()
-  {
-    if (IS_POST) {
-      $admin = new Admin();
-      if (!$admin->getOneByUsername(I('post.username'))) {
-        $this->ajaxResponse->returnErr(99999, '用户不存在');
-        return;
-      }
+    protected $settings;
 
-      if (!$admin->checkPassword(I('post.password'))) {
-        $this->ajaxResponse->returnErr(99999, '用户名或密码错误');
-        return;
-      }
-
-      $this->ajaxResponse->returnOk(null, '登陆完成');
-      return;
+    public function __construct()
+    {
+        parent::__construct();
+        $this->ajaxResponse = new AjaxResponse();
+        $this->setting = new Setting('system');
+        $this->settings = $this->setting->read();
     }
 
-    if (I('GET.error') == 'permit') {
-      $this->assign('error', '没有相应权限');
+    public function index()
+    {
+        $action_limitation = new ActionLimitation(
+            get_client_ip(),
+            'login',
+            $this->settings['admin_login_retry_times'],
+            $this->settings['admin_login_retry_duration']
+        );
+
+        if (IS_POST) {
+            if (!$action_limitation->isAllowed()) {
+                $this->ajaxResponse->returnErr(
+                    99999,
+                    '超过重试限制，请' . $this->settings['admin_login_retry_duration'] . '秒后再试'
+                );
+            }
+
+            $admin = new Admin();
+            if (!$admin->getOneByUsername(I('post.username'))) {
+                $this->ajaxResponse->returnErr(99999, '用户不存在');
+                return;
+            }
+
+            if (!$admin->checkPassword(I('post.password'))) {
+                $this->ajaxResponse->returnErr(99999, '用户名或密码错误');
+                return;
+            }
+
+            $this->ajaxResponse->returnOk(null, '登陆完成');
+            return;
+        }
+
+        if (I('GET.error') == 'permit') {
+            $this->assign('error', '没有相应权限');
+        }
+
+        $this->display();
     }
 
-    $this->display();
-  }
-
-  public function logout()
-  {
-    $admin = new Admin();
-    $admin->clearLogin();
-    $this->redirect('Login/index');
-  }
+    public function logout()
+    {
+        $admin = new Admin();
+        $admin->clearLogin();
+        $this->redirect('Login/index');
+    }
 }

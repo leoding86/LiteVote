@@ -1,133 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>附件管理</title>
-  <css href="__PUBLIC__/bootstrap3/css/bootstrap.min.css" />
-  <css href="__PUBLIC__/lib/jquery-ui-1.10.4/css/no-theme/jquery-ui.css" />
-  <css href="__PUBLIC__/admin/default/admin.css" />
-  <js href="__PUBLIC__/jquery-1.12.js" />
-  <js href="__PUBLIC__/lib/jquery-ui-1.10.4/js/jquery-ui.js" />
-  <js href="__PUBLIC__/lib/notify.min.js" />
-  <js href="__PUBLIC__/lib/fineuploader/all.fine-uploader.core.min.js" />
-  <js href="__PUBLIC__/bootstrap3/js/bootstrap.min.js" />
-  <js href="__PUBLIC__/admin/default/admin.js" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>附件管理</title>
+    <css href="__PUBLIC__/bootstrap3/css/bootstrap.min.css" />
+    <css href="__PUBLIC__/lib/jquery-ui-1.10.4/css/no-theme/jquery-ui.css" />
+    <css href="__PUBLIC__/admin/default/admin.css" />
+    <js href="__PUBLIC__/jquery-1.12.js" />
+    <js href="__PUBLIC__/lib/jquery-ui-1.10.4/js/jquery-ui.js" />
+    <js href="__PUBLIC__/lib/notify.min.js" />
+    <js href="__PUBLIC__/lib/fineuploader/all.fine-uploader.core.min.js" />
+    <js href="__PUBLIC__/bootstrap3/js/bootstrap.min.js" />
+    <js href="__PUBLIC__/admin/default/admin.js" />
+    <js href="__PUBLIC__/attachment/Attachment.js" />
 </head>
+
 <body id="uploader">
-  <div class="container-fluid">
-    <div class="row" id="uploader">
-      <div class="col-md-12">
-        <h2>附件管理</h2>
-      </div>
-      <div class="col-md-12" id="btns">
-        <button class="btn btn-primary" id="upload-btn">上传</button>
-        <button class="btn btn-warning" id="select-btn" style="display:none">选择</button>
-      </div>
-      <div class="col-md-12" id="progress">
-        <div class="progress">
-          <div class="progress-bar" rol="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    <div class="container-fluid">
+        <div class="row" id="uploader">
+            <div class="col-md-12" id="btns">
+                <button class="btn btn-primary" id="upload-btn">上传</button>
+                <button class="btn btn-warning" id="select-btn" style="display:none">选择</button>
+            </div>
+            <div class="col-md-12" id="progress">
+                <div class="progress">
+                    <div class="progress-bar" rol="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
         </div>
-      </div>
+        <div class="row" id="attachments">
+
+            <volist name="list" id="item">
+            <div class="attachment-wrapper col-md-2 col-sm-3 col-xs-4">
+                <div class="attachment-item" data-attachment-id="{$item['id']}" data-attachment-path="{$item['path']}">
+                    <div class="attachment-content">
+                        <div class="preview-wrapper">
+                            <div class="preview" style="background-image:url({:C('UPLOAD_BASE')}{$item['path']})"></div>
+                        </div>
+                        <div class="title">{$item['title']}</div>
+                    </div>
+                </div>
+            </div>
+            </volist>
+        </div>
+        <div class="row">
+            <div class="col-md-12 pages">
+                {$page}
+            </div>
+        </div>
     </div>
-    <div class="row" id="attachments">
-      <div class="col-md-12">
-        <volist name="list" id="item">
-          <div class="attachment-item" data-attachment-id="{$item['id']}" data-attachment-path="{$item['path']}">
-            <div class="thumb"><img class="img-responsive" src="{:C('UPLOAD_BASE')}{$item['path']}" alt=""></div>
-            <div class="title">{$item['title']}</div>
-          </div>
-        </volist>
-      </div>
-      <div class="col-md-12 pages">
-        {$page}
-      </div>
-    </div>
-  </div>
 </body>
 <script>
-(function($) {
-  var selectedItems = [];
-  var singleMode = true;
-  var $selectBtn = $('#select-btn');
+(function ($) {
+    /* 初始化上传 */
+    var uploader = new qq.FineUploaderBasic({
+        element: $('#uploader')[0],
+        button: $('#upload-btn')[0],
 
-  var uploader = new qq.FineUploaderBasic({
-    element: $('#uploader')[0],
-    button: $('#upload-btn')[0],
-  
-    request: {
-      endpoint: "{:U('Attachment/upload')}",
-      inputName: 'file',
-      totalFileSizeName: 'file_size'
-    },
-  
-    callbacks: {
-      onError: function(id, name, errorReason, xhr) {
-        $.notify('上传出错，请重新上传', 'error');
-      },
-      onComplete: function(id, name, responseJSON, xhr) {
-        console.log('complete', id, name, responseJSON, xhr);
-      },
-      onAllComplete: function(succeeded, failed) {
-        $.notify('上传完成', 'success');
-      },
-      onUpload: function(id, name) {
-        console.log('upload', id, name);
-      },
-      onTotalProgress: function(totalUploadedBytes, totalBytes) {
-        $('#progress .progress-bar').width(Math.round(totalBytes / totalUploadedBytes * 100) + '%');
-      }
-    }
-  });
-  
-  $('.attachment-item').on('click', function() {
-    var $selectedAttachmentItems = $(this).parent().children('[data-selected]');
+        request: {
+            endpoint: "{:U('Attachment/upload')}",
+            inputName: 'file',
+            totalFileSizeName: 'file_size'
+        },
 
-    if ($(this).attr('data-selected')) {
-      $(this).removeClass('attachment-selected');
-      $(this).removeAttr('data-selected');
-    } else {
-      if (singleMode && $selectedAttachmentItems.length > 0) {
-        $.notify('只能选择一个', 'error');
-        return;
-      }
-
-      $(this).addClass('attachment-selected');
-      $(this).attr('data-selected', 'selected');
-    }
-
-    $selectedAttachmentItems = $(this).parent().children('[data-selected]');
-    selectedItems = [];
-
-    if ($selectedAttachmentItems.length > 0) {
-      $selectBtn.show();
-    } else {
-      $selectBtn.hide();
-    }
-
-    $selectedAttachmentItems.each(function(index) {
-      var attachmentId = $(this).attr('data-attachment-id');
-      var attachmentPath = $(this).attr('data-attachment-path');
-      selectedItems.push({
-        id: attachmentId,
-        path: attachmentPath,
-        src: "{:C('UPLOAD_BASE')}" + attachmentPath
-      });
+        callbacks: {
+            onError: function (id, name, errorReason, xhr) {
+                $.notify('上传出错，请重新上传', 'error');
+            },
+            onComplete: function (id, name, responseJSON, xhr) {
+                console.log('complete', id, name, responseJSON, xhr);
+            },
+            onAllComplete: function (succeeded, failed) {
+                setTimeout(function () {
+                    window.location.reload();
+                }, 3000);
+                $.notify('上传完成，刷新中...', 'success');
+            },
+            onUpload: function (id, name) {
+                console.log('upload', id, name);
+            },
+            onTotalProgress: function (totalUploadedBytes, totalBytes) {
+                $('#progress .progress-bar').width(Math.round(totalBytes / totalUploadedBytes * 100) +
+                    '%');
+            }
+        }
     });
-  });
-  
-  $selectBtn.on('click', function() {
-    if (window.opener.uploaderSelectCallback !== undefined) {
-      if (singleMode) {
-        window.opener.uploaderSelectCallback(selectedItems[0], window.inputId);
-      }
-    } else {
-      throw('Do not have callback function');
-    }
 
-    window.close();
-  });
+    /* Attachment Picker */
+    var picker = window.picker = Attachment.Create('Picker', {
+        $items:     $('.attachment-item'),
+        $pickerBtn: $('#select-btn')
+    });
+    picker.on('picked', function($selectedItems) {
+        var selectedDataset = [];
+
+        $selectedItems.each(function(i) {
+            var $item = $selectedItems.eq(i);
+            selectedDataset.push({
+                id: $item.attr('data-attachment-id'),
+                path: $item.attr('data-attachment-path')
+            });
+        });
+
+        return selectedDataset;
+    });
 })(jQuery);
 </script>
+
 </html>

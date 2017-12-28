@@ -94,7 +94,7 @@ return array(
     'LOG_EXCEPTION_RECORD'   => false, // 是否记录异常信息日志
 
     /* SESSION设置 */
-    'SESSION_AUTO_START'     => true, // 是否自动开启Session
+    'SESSION_AUTO_START'     => false, // 是否自动开启Session
     'SESSION_OPTIONS'        => array(), // session 配置数组 支持type name id path expire domain 等参数
     'SESSION_TYPE'           => '', // session handler类型 默认无需设置 除非扩展了session handler驱动
     'SESSION_PREFIX'         => '', // session 前缀

@@ -1,5 +1,6 @@
 <ul class="list-group">
   <admin:grant permit="AdministratorGroup/index"><li class="list-group-item"><a href="{:U('AdministratorGroup/index')}">管理员组管理</a></li></admin:grant>
   <admin:grant permit="Administrator/index"><li class="list-group-item"><a href="{:U('Administrator/index')}">管理员管理</a></li></admin:grant>
-  <admin:grant permit="System/index"><li class="list-group-item"><a href="{:U('System/setting')}">系统管理</a></li></admin:grant>
+  <admin:grant permit="System/index"><li class="list-group-item"><a href="{:U('System/setting')}">系统设置</a></li></admin:grant>
+  <admin:grant premit="System/operationLog"><li class="list-group-item"><a href="{:U('System/operationLog')}">操作日志</a></li></admin:grant>
 </ul>

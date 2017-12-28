@@ -1,123 +1,185 @@
 body#admin-page {
-  padding: 50px 0 50px 200px;
+    padding: 50px 0 50px 200px;
 }
 
 body {
-  padding: 0;
+    padding: 0;
 }
 
-#login-content {
+.nopadding {
+    padding:0 !important;
 }
+
+.nomargin {
+    margin:0 !important;
+}
+
+.pagenation {
+    margin-top: 5px;
+    border-left: 1px solid #ddd;
+}
+
+.clear:after {
+    display: block;
+    content: ' ';
+    clear: both;
+}
+
+.pagenation .current,
+.pagenation .num,
+.pagenation .next,
+.pagenation .prev {
+    display: block;
+    float: left;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-left: none;
+}
+
+#login-content {}
 
 #header-partial {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 50px;
-  background: #fff;
-  z-index: 101;
-  box-shadow: 0 0 10px rgb(151, 151, 151);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background: #fff;
+    z-index: 101;
+    box-shadow: 0 0 10px rgb(151, 151, 151);
 }
 
 #header-partial h1.title {
-  font-size: 30px;
-  margin: 0;
-  line-height: 50px;
+    font-size: 30px;
+    margin: 0;
+    line-height: 50px;
 }
 
 #login-info .btn {
-  position: relative;
-  top:8px;
+    position: relative;
+    top: 8px;
 }
 
 #left-partial {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 200px;
-  background: #eee;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 200px;
+    background: #eee;
 }
 
-#left-partial > .container-fluid {
-  padding-top: 60px;
+#left-partial>.container-fluid {
+    padding-top: 60px;
 }
 
 #footer-partial {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 50px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
 }
 
 #ui-datepicker-div {
-  background: #fff;
+    background: #fff;
 }
 
 .ui-icon {
-  text-indent: 0;
-  cursor: pointer;
+    text-indent: 0;
+    cursor: pointer;
 }
 
 .table-top-actionbar {
-  margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 
-table > tbody.empty-body {
-  content: '';
-  display: block;
-  height: 20px;
+table>tbody.empty-body {
+    content: '';
+    display: block;
+    height: 20px;
 }
 
 #question-groups .panel-body,
 .dataset-list-panel-body {
-  padding: 0px 10px;
+    padding: 0px 10px;
 }
 
 ul.questions-list,
 ul.dataset-list {
-  padding: 10px 0;
-  margin: 0;
+    padding: 10px 0;
+    margin: 0;
 }
 
 .form-alert {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 #uploader #btns,
 #uploader #progress {
-  margin-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+#uploader #attachments .attachment-wrapper {
+    margin-bottom: 15px;
 }
 
 #uploader #attachments .attachment-item {
-  margin-bottom: 15px;
-  margin-right: 15px;
-  width: 200px;
-  height: 200px;
-  float: left;
+    position: relative;
+    width: 100%;
+    padding-top: 120%;
+    overflow: hidden;
+}
+
+#uploader #attachments .attachment-content {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+#uploader #attachments .attachment-content .preview-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 100%;
+}
+
+#uploader #attachments .attachment-content .preview {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    background-position: center center;
 }
 
 #uploader #attachments .thumb {
-  padding: 5px;
-  border:1px solid #dedede;
-  border-radius: 5px;
+    padding: 5px;
+    border: 1px solid #dedede;
+    border-radius: 5px;
 }
 
-#uploader .attachment-selected .thumb {
-  background: #eee;
-  border-color: #ccc;
+#uploader #attachments .selected .preview {
+    border-color: #337aff;
 }
 
-#uploader .attachment-selected .title {
-  font-weight: 700;
+#uploader #attachments .selected .title {
+    font-weight: 700;
+    color: #337aff;
 }
 
 form .uploader img {
-  margin-bottom: 3px;
-  padding: 3px;
-  border: 1px solid #eee;
-  border-radius: 3px;
+    margin-bottom: 3px;
+    padding: 3px;
+    border: 1px solid #eee;
+    border-radius: 3px;
 }

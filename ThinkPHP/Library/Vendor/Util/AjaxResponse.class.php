@@ -31,18 +31,18 @@ class AjaxResponse
   public function returnErr($code = 99999, $msg = '')
   {
     header("Content-Type: application/json");
-    exit(json_encode($this->errBody($code, $msg)));
+    echo(json_encode($this->errBody($code, $msg)));
   }
 
   public function returnOk($data = null, $msg = '')
   {
     header("Content-Type: application/json");
-    exit(json_encode($this->okBody($data, $msg)));
+    echo(json_encode($this->okBody($data, $msg)));
   }
 
   public function returnResult($status, $code, $data, $msg)
   {
     header("Content-Type: application/json");
-    exit(json_decode($this->body($status, $code, $data, $msg)));
+    echo(json_decode($this->body($status, $code, $data, $msg)));
   }
 }

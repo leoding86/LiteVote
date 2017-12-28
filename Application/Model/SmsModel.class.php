@@ -4,17 +4,19 @@ namespace Model;
 class SmsModel extends \Think\Model
 {
 
-    public function error() {
+    public function error()
+    {
         return $this->_error;
     }
 
-    public function searchForm() {
+    public function searchForm()
+    {
         return $this->_searchForm;
     }
 
     /**
      * 添加日志信息
-     * 
+     *
      * @param string $sms_id
      * @param string $mobile
      * @param string $type
@@ -26,17 +28,17 @@ class SmsModel extends \Think\Model
      * @return void
      */
     public function add(
-        $sms_id, 
-        $mobile, 
-        $type, 
+        $sms_id,
+        $mobile,
+        $type,
         $content,
         $replacements,
         $status,
-        $code = '', 
+        $code = '',
         $used = false,
         $platform = ''
     ) {
-      parent::add([
+        parent::add([
         'smsid'     => $sms_id,
         'mobile'    => $mobile,
         'type'      => $type,
@@ -46,37 +48,46 @@ class SmsModel extends \Think\Model
         'is_sended' => $status ? 1 : 0,
         'is_used'   => $used ? 1 : 0,
         'create_time' => time(),
-      ]);
+        ]);
     }
 
-    public function verifyCode($time_in, $mobile = null, $code = null, $type = null, $is_use = true) {
+    public function verifyCode($time_in, $mobile = null, $code = null, $type = null, $is_use = true)
+    {
         $mobile = preg_match('/^1\d{10}$/', $mobile) ? $mobile : '';
         $code   = preg_match('/^\d{4,8}$/', $code) ? $code : '';
         $type   = preg_match('/^[a-z_]+$/i', $type) ? $type : '';
         if (empty($type) or empty($mobile) or empty($code)) {
             $this->_error = '错误的参数';
             return false;
-        }else {
-            $where = sprintf("`type`='%s' AND `mobile`='%s' AND `code`='%s' AND `create_time`<%d AND `is_sended`=%d AND `is_used`=%d",
-                     $type, $mobile, $code, $time_in, 1, 0);
+        } else {
+            $where = sprintf(
+                "`type`='%s' AND `mobile`='%s' AND `code`='%s' AND `create_time`<%d AND `is_sended`=%d AND `is_used`=%d",
+                $type,
+                $mobile,
+                $code,
+                $time_in,
+                1,
+                0
+            );
             $order = "`id` DESC";
             $result = $this->where($where)->order($order)->find();
             if (!empty($result)) {
                 $is_use ? $this->setUsed($result['id']) : '';
                 return true;
-            }
-            else {
+            } else {
                 $this->_error = '验证码错误';
                 return false;
             }
         }
     }
 
-    public function lists() {
-      throw new \Exception('not implemented');
+    public function lists()
+    {
+        throw new \Exception('not implemented');
     }
 
-    private function setUsed($id) {
+    private function setUsed($id)
+    {
         $data = array('is_used' => 1);
         $where = sprintf("`id` = %d", $id);
         $this->where($where)->data($data)->save();
@@ -118,6 +129,6 @@ class SmsModel extends \Think\Model
      */
     public function get_one($where)
     {
-      return $this->where($where)->find();
+        return $this->where($where)->find();
     }
 }

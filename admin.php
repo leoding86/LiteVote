@@ -21,6 +21,8 @@ define('APP_DEBUG', true);
 
 define('BIND_MODULE', 'Admin');
 
+define('APP_STATUS', 'development');
+
 // 定义应用目录
 define('APP_PATH', './Application/');
 

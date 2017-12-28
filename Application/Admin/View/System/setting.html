@@ -1,0 +1,59 @@
+<extend name="Base/base" />
+
+<block name="body">
+  <taglib name="Admin" />
+  <div class="row">
+    <div class="col-md-12">
+      <h3>系统设置</h3>
+    </div>
+    <div class="col-md-6">
+      <form action="__SELF__" method="POST">
+        <div class="panel panel-default">
+          <div class="panel-heading">微信设置</div>
+          <div class="panel-body">
+            <div class="form-group">
+                <label for="wechat-app-key">APP KEY</label>
+                <input type="text" name="wechat_app_key" id="wechat-app-key" class="form-control" value="{$settings['wechat_app_key']}">
+            </div>
+            <div class="form-group">
+                <label for="wechat-app-secret">APP SECRET</label>
+                <input type="text" name="wechat_app_secret" id="wechat-app-secret" class="form-control" value="{$settings['wechat_app_secret']}">
+            </div>
+            <div class="form-group">
+              <label for="wechat_router">中心服务器</label>
+              <input type="text" class="form-control" id="wechat_router" name="wechat_router" value="{$settings['wechat_router']}">
+            </div>
+            <div class="form-group">
+              <label for="wechat_router_redirect_arg">中心服务器跳转参数</label>
+              <input type="text" class="form-control" id="wechat_router_redirect_arg" name="wechat_router_redirect_arg" value="{$settings['wechat_router_redirect_arg']}">
+            </div>
+            <div class="form-group">
+              <label for="wechat_router_openid_arg">中心服务器回调OPENID参数</label>
+              <input type="text" class="form-control" id="wechat_router_openid_arg" name="wechat_router_openid_arg" value="{$settings['wechat_router_openid_arg']}">
+            </div>
+            <button class="btn btn-primary">保存</button>
+          </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">后台登陆设置</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="admin-login-captcha-type">登陆验证类型</label>
+                    <admin:select class="form-control" name="admin_login_captcha_type" id="admin-login-captcha-type" options="verify_type_options" value="$settings['admin_login_captcha_type']" />
+                </div>
+                <div class="form-group">
+                    <label for="admin-login-retry-times">登陆重试次数</label>
+                    <input class="form-control" type="number" name="admin_login_retry_times" id="admin-login-retry-times" value="{$settings['admin_login_retry_times']}">
+                </div>
+                <div class="form-group">
+                    <label for="admin-login-retry-duration">登陆重试时长限制（秒）</label>
+                    <input type="number" name="admin_login_retry_duration" id="admin-login-retry-duration" class="form-control" value="{$settings['admin_login_retry_duration']}">
+                </div>
+            </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</block>

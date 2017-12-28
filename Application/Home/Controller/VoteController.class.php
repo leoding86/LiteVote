@@ -7,6 +7,7 @@ use Model\ParticipatorModel as Participator;
 use Model\VoteLogModel as VoteLog;
 use Vendor\Sms\Api as Sms;
 use Think\Verify;
+use Vendor\WeChatRouter\WeChatRouter;
 
 class VoteController extends EntryController
 {
@@ -29,13 +30,26 @@ class VoteController extends EntryController
       $this->error('指定的投票不存在');
     }
 
-    $vote_items_list = $Vote->getVoteItemsList();
+    if ($Vote->verify_type == Vote::VERIFY_WECHAT) {
+      if (!session('wechat_openid')) {
+        $wechat_router = new WeChatRouter();
+        $wechat_router->user('http://127.0.0.1' . U('Vote/wechatRouterCallback', ['vote_unid' => $Vote->unid]));
+        return;
+      }
+    }
+
+    $vote_items_dataset = $Vote->getVoteItemsList();
 
     $this->assign('verify', new Verify());
     $this->assign('vote', $Vote->data());
-    $this->assign('vote_items_list', $vote_items_list);
+    $this->assign('vote_items_dataset', $vote_items_dataset);
     $this->assign('now', new \DateTime());
-    $this->display();
+
+    if ($template = $Vote->getTemplateFile()) {
+        $this->display($template);
+    } else {
+        $this->display();
+    }
   }
 
   /**
@@ -51,6 +65,7 @@ class VoteController extends EntryController
 
     if (!$Vote->getOneByUnid((int)$post['unid'])) {
       $this->AjaxResponse->returnErr('NOT_EXISTS', '投票不存在');
+      return;
     }
 
     $VoteLog->setVoteId($Vote->id); // 设置日志数据表
@@ -62,6 +77,7 @@ class VoteController extends EntryController
 
       if (!$Sms->verifyCode($post['mobile'], $post['code'], $Sms::SMS_DEFAULT_CODE_TYPE, true)) {
         $this->AjaxResponse->returnErr('SMS_CODE_ERR', '短信验证码错误');
+        return;
       }
 
       if (!$Participator->getOneByMobile($post['mobile'])) {
@@ -69,6 +85,8 @@ class VoteController extends EntryController
           'mobile' => $post['mobile'],
         ]);
       }
+    } else if ($Vote->verify_type == $Vote::VERIFY_WECHAT) {
+
     } else {
       E('系统错误[INVALID_VOTE_VERIFY_TYPE:' . $Vote->verify_type . ']');
     }
@@ -78,11 +96,12 @@ class VoteController extends EntryController
       switch ($Vote->interval) {
         case Vote::ONCE_INTERVAL_TYPE:
           $this->AjaxResponse->returnErr('HAD_VOTED', '已经投票过票了');
-          break;
+          return;
         case Vote::DALIY_INTERVAL_TYPE:
           $VoteLog->vote_time->setTime(23, 59, 59);
           if ($VoteLog->vote_time->getTimestamp() > NOW_TIME) {
             $this->AjaxResponse->returnErr('HAD_VOTED_TODAY', '今天已经投过票了');
+            return;
           }
           break;
       }
@@ -96,6 +115,7 @@ class VoteController extends EntryController
     /* 检查投票项目是否有效 */
     if (!$Vote->checkVoteItems($VoteItem->list)) {
       $this->AjaxResponse->returnErr('INVALID_SUBMIT', $Vote->getError());
+      return;
     }
 
     M()->startTrans();
@@ -119,5 +139,18 @@ class VoteController extends EntryController
     M()->commit();
 
     $this->AjaxResponse->returnOk();
+    return;
+  }
+
+  /**
+   * 微信路由回调路径
+   *
+   * @return void
+   */
+  public function wechatRouterCallback()
+  {
+    $get = I('GET.');
+    $wechat_router = new WeChatRouter();
+
   }
 }
