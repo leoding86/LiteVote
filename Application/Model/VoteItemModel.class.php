@@ -3,6 +3,7 @@ namespace Model;
 
 use Ramsey\Uuid\Uuid;
 use Model\VoteModel as Vote;
+use Exceptions\ModelCURDException;
 
 class VoteItemModel extends BaseModel
 {
@@ -14,17 +15,24 @@ class VoteItemModel extends BaseModel
    */
     protected $datetimeFields = ['create_time', 'update_time'];
 
+    /**
+     * 排序字段
+     *
+     * @var string
+     */
+    protected $orderField = 'order';
+
   /**
    * 自动验证设置
    *
    * @var array
    */
     protected $_validate = [
-    ['title', 'require', '投票标题不能为空', self::MUST_VALIDATE, 'regex'],
-    ['title', '1, 30', '投票标题长度不能超过30字', self::MUST_VALIDATE, 'length'],
-    ['content_type', [self::CONTENT_TYPE_BODY, self::CONTENT_TYPE_LINK], '项目内容类型出错', self::MUST_VALIDATE, 'in'],
-    ['thumb', '/[a-z\d]\.(?:jpe?g|png|gif)$/', '封面链接格式出错', self::VALUE_VALIDATE, 'regex'],
-    ['redirect_url', '/^https?:\/\/[a-z\d]+(?:\.[a-z\d])+/', '跳转链接格式出错', self::VALUE_VALIDATE, 'regex'],
+        ['title', 'require', '投票标题不能为空', self::MUST_VALIDATE, 'regex'],
+        ['title', '1, 30', '投票标题长度不能超过30字', self::MUST_VALIDATE, 'length'],
+        ['content_type', [self::CONTENT_TYPE_BODY, self::CONTENT_TYPE_LINK], '项目内容类型出错', self::MUST_VALIDATE, 'in'],
+        ['thumb', '/[a-z\d]\.(?:jpe?g|png|gif)$/', '封面链接格式出错', self::VALUE_VALIDATE, 'regex'],
+        ['redirect_url', '/^https?:\/\/[a-z\d]+(?:\.[a-z\d])+/', '跳转链接格式出错', self::VALUE_VALIDATE, 'regex'],
     ];
 
   /**
@@ -108,5 +116,36 @@ class VoteItemModel extends BaseModel
 
             $this->where($where)->setInc('votes');
         }
+    }
+
+    /**
+     * 排序
+     *
+     * @return void
+     */
+    public function sort($sorted_list, Vote $vote)
+    {
+        if (empty($sorted_list)) {
+            return;
+        }
+
+        $sort_index = count($sorted_list);
+        foreach ($sorted_list as $vote_item_id) {
+            $where = [
+                'vote_id' => ['eq', $vote->id],
+                'id'      => ['eq', $vote_item_id],
+            ];
+            $data = [
+                'order' => $sort_index,
+            ];
+            try {
+                $this->data($data)->where($where)->save();
+                $sort_index--;
+            } catch (\Exception $e) {
+                throw new ModelCURDException($e->getMessage());
+            }
+        }
+
+        return;
     }
 }
