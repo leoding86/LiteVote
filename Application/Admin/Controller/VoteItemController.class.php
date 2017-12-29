@@ -181,4 +181,42 @@ class VoteItemController extends EntryController
         $VoteItem->deleteOne();
         redirect($this->referer);
     }
+
+    /**
+     * 排序投票项目
+     *
+     * [permit=voteitem/sort; permitDescription=投票项目排序]
+     * @return void
+     */
+    public function sort()
+    {
+        if (IS_POST) {
+            $post = I('POST.');
+            $vote = new Vote();
+
+            if (!$vote->getOneById($post['vote_id'])) {
+                $this->ajaxResponse->returnErr(99999, '指定的投票不存在');
+                return;
+            }
+
+            $vote_item = new VoteItem();
+            try {
+                $vote_item->sort($post['sort'], $vote);
+                $logger = new Logger();
+                $logger->info(
+                    "{username} 排序了投票 《{$vote->title}》 的项目",
+                    [
+                        'user' => $this->admin,
+                        'operation' => Logger::UPDATE_OP,
+                        'target' => 'vote_item',
+                    ]
+                );
+                $this->ajaxResponse->returnOk(null, '排序完成');
+                return;
+            } catch (\Exception $e) {
+                $this->ajaxResponse->returnErr(99999, '排序发生错误');
+                return;
+            }
+        }
+    }
 }
