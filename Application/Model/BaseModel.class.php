@@ -31,6 +31,21 @@ class BaseModel extends SuperModel
    */
     protected $deleteFlagField = 'delete_flg';
 
+    /**
+     * 数据列表排序列
+     *
+     * @var string
+     */
+    protected $orderField = null;
+
+    /**
+     * 数据列表排序方向
+     * DESC || ASC
+     *
+     * @var string
+     */
+    protected $orderSort = 'DESC';
+
   /**
    * 对应数据列表
    *
@@ -195,7 +210,14 @@ class BaseModel extends SuperModel
         if (!is_null($this->deleteFlagField)) {
             $where = array_merge($where, [$this->deleteFlagField => 0]);
         }
-        return $this->list = $this->where($where)->order('id DESC')->limit($Page->firstRow . ',' . $Page->listRows)->select();
+
+        if (!is_null($this->orderField) && in_array($this->orderSort, ['ASC', 'DESC'])) {
+            $this->order($this->orderField . ' ' . $this->orderSort);
+        } else {
+            $this->order($this->getPk() . ' DESC');
+        }
+
+        return $this->list = $this->where($where)->limit($Page->firstRow . ',' . $Page->listRows)->select();
     }
 
   /**
