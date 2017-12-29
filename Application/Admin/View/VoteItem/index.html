@@ -1,5 +1,9 @@
 <extend name="Base/base" />
 
+<block name="head_js">
+  <script src="__PUBLIC__/lib/Sortable.js"></script>
+</block>
+
 <block name="body">
   <taglib name="Admin" />
   <div class="row">
@@ -7,7 +11,8 @@
       <h3>投票 “{$vote['title']}” / 项目列表</h3>
     </div>
     <div class="col-md-12 table-top-actionbar">
-      <admin:grent permit="VoteItem/create"><a class="btn btn-primary" href="{:U('VoteItem/create', ['vote_id' => $vote['id']])}">创建</a></admin:grant>
+      <admin:grant permit="VoteItem/create"><a class="btn btn-primary" href="{:U('VoteItem/create', ['vote_id' => $vote['id']])}">创建</a></admin:grant>
+      <admin:grant permit="VoteItem/sort"><a role="button" class="btn btn-warning disabled" disabled id="sort-btn" href="javascript:void(0)">排序</a></admin:grant>
     </div>
     <div class="col-md-12">
       <div class="table-responsive">
@@ -20,20 +25,82 @@
               <th style="width:100px">操作</th>
             </tr>
           </thead>
-          <volist name="list" id="item">
-            <tr>
-              <td>{$item.id}</td>
-              <td>{$item.title}</td>
-              <td>{$item['create_time']->format('Y-m-d H:i:s')}</td>
-              <td>
-                <admin:grent permit="VoteItem/edit"><a href="{:U('VoteItem/edit', ['id' => $item['id']])}">查看</a></admin:grant>
-                <admin:grent permit="VoteItem/delete"><a href="{:U('VoteItem/delete', ['id' => $item['id']])}">删除</a></admin:grant>
-              </td>
-            </tr>
-          </volist>
+          <tbody class="sortable-list">
+            <volist name="list" id="item">
+              <tr class="sortable-item" data-id="{$item['id']}">
+                <td>{$item.id}</td>
+                <td>{$item.title}</td>
+                <td>{$item['create_time']->format('Y-m-d H:i:s')}</td>
+                <td>
+                  <admin:grent permit="VoteItem/edit"><a href="{:U('VoteItem/edit', ['id' => $item['id']])}">查看</a></admin:grant>
+                  <admin:grent permit="VoteItem/delete"><a href="{:U('VoteItem/delete', ['id' => $item['id']])}">删除</a></admin:grant>
+                </td>
+              </tr>
+            </volist>
+          </tbody>
         </table>
       </div>
       {$page}
     </div>
   </div>
+</block>
+
+<block name="foot_js">
+  <script>
+  $(function() {
+    var sortableInstance,
+        $sortableList = $('.sortable-list')[0];
+        $sortBtn = $('#sort-btn'),
+        sortArray = [],
+        saveSortUrl = "{:U('VoteItem/sort')}";
+        voteId = "{$vote['id']}";
+
+    function enableSortBtn() {
+      if ($sortBtn.attr('disabled') !== undefined) {
+        $sortBtn.removeAttr('disabled');
+        $sortBtn.removeClass('disabled');
+        $sortBtn.on('click', saveSort);
+      }
+    }
+
+    function disableSortBtn() {
+      $sortBtn.attr('disabled', 'disabled');
+      $sortBtn.addClass('disabled');
+      $sortBtn.off('click', saveSort);
+    }
+
+    function saveSort() {
+      disableSortBtn();
+      $.ajax({
+        url   : saveSortUrl,
+        type  : 'post',
+        data  : {
+          vote_id : voteId,
+          sort    : sortArray
+        },
+        success: function(r) {
+          if (r.status == 'ok') {
+            $.notify(r.msg, 'success');
+          } else {
+            $.notify(r.msg, 'error');
+          }
+        },
+        error: function() {
+          $.notify('请求发生异常，请刷新后重试', 'warning');
+        }
+      })
+    }
+
+    sortableInstance = Sortable.create($sortableList, {
+      animation: 300,
+      scrollSensitivity: 100,
+      dataIdAttr: 'data-id',
+      onSort: function(e) {
+        enableSortBtn();
+        sortArray = this.toArray();
+        console.log(sortArray);
+      }
+    });
+  });
+  </script>
 </block>
