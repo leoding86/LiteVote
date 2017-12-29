@@ -213,7 +213,7 @@ class LoggerModel extends BaseModel implements LoggerInterface
      */
     public function log($level, $message, array $context = array())
     {
-        $string_template = new StringTemlate();
+        $string_template = new StringTemplate;
         $data = [
             'user_id'   => $context['user']->id,
             'username'  => $context['user']->username,
