@@ -51,7 +51,11 @@ class VoteModel extends BaseModel
    */
     protected $datetimeFields = ['start_time', 'end_time', 'create_time', 'update_time'];
 
-
+    /**
+     * 模板模型
+     *
+     * @var Template
+     */
     protected static $template = null;
 
   /**
@@ -236,7 +240,11 @@ class VoteModel extends BaseModel
             $this->template = new Template('vote');
         }
 
-        return $this->template->getFile('vote_' . $this->id);
+        if (!$template_file = $this->template->getFile('vote_' . $this->id)) {
+            $template_file = $this->template->getFile('vote_default');
+        }
+
+        return $template_file;
     }
 
     public static function templateTypeOptions()
