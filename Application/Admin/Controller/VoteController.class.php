@@ -282,4 +282,33 @@ HTML;
         $this->assign('template', $template_content);
         $this->display();
     }
+
+    /**
+     * 预览投票
+     *
+     * [permit=Vote/preview; premitDescription=预览投票]
+     * @return void
+     */
+    public function preview()
+    {
+        $vote = new Vote();
+
+        if (!$vote->getOneById(I('GET.id/d'))) {
+            $this->error('指定投票不存在');
+        }
+
+        $vote_items_dataset = $vote->getVoteItemsList();
+
+        $this->assign('vote', $vote->data());
+        $this->assign('vote_items_dataset', $vote_items_dataset);
+        $this->assign('now', new \DateTime());
+
+        $template = new Template("vote");
+
+        if ($template_file = $template->getFile('vote_' . $vote->id)) {
+            $this->display($template_file);
+        } else {
+            $this->display($template_file->getFile('vote_default'));
+        }
+    }
 }

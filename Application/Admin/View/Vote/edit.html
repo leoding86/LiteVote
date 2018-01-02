@@ -117,10 +117,11 @@
                 </div>
             </div>
         </div>
+        <a href="javascript:window.history.go(-1)" class="btn btn-default">返回</a>
         <admin:grant permit="Vote/create">
           <button class="btn btn-primary">保存</button>
         </admin:grant>
-        <a class="btn btn-default" href="javascript:window.history.go(-1)">返回</a>
+        <a href="{:U('Vote/preview', ['id' => $vote['id']])}" target="_blank" class="btn btn-warning">预览</a>
         <input type="hidden" name="id" value="{$post['id']}">
       </form>
     </div>
